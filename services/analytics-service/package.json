@@ -1,0 +1,32 @@
+{
+  "name": "analytics-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bullmq": "^5.73.3",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "geoip-lite": "^2.0.1",
+    "ioredis": "^5.10.1",
+    "pg": "^8.20.0",
+    "ua-parser-js": "^2.0.9"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/geoip-lite": "^1.4.4",
+    "@types/node": "^25.5.2",
+    "@types/pg": "^8.20.0",
+    "@types/ua-parser-js": "^0.7.39",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}
