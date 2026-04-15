@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken'
 interface User {
   id: number
   email: string
-  plan: string
 }
 
 interface AuthResult {
@@ -42,9 +41,9 @@ class AuthService {
 
       // User banao
       const result = await this.db.query(
-        `INSERT INTO users (email, password, plan)
-         VALUES ($1, $2, 'free')
-         RETURNING id, email, plan`,
+        `INSERT INTO users (email, password)
+         VALUES ($1, $2)
+         RETURNING id, email`,
         [email, hashedPassword]
       )
 
@@ -86,7 +85,7 @@ class AuthService {
       return {
         success: true,
         token,
-        user: { id: user.id, email: user.email, plan: user.plan }
+        user: { id: user.id, email: user.email }
       }
 
     } catch (err) {
@@ -97,7 +96,7 @@ class AuthService {
 
   private generateToken(user: User): string {
     return jwt.sign(
-      { userId: user.id, email: user.email, plan: user.plan },
+      { userId: user.id, email: user.email },
       process.env.JWT_SECRET || 'secret',
       { expiresIn: '7d' }
     )
