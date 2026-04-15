@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken'
 interface JWTPayload {
   userId: number
   email: string
-  plan: string
   iat: number
   exp: number
 }
@@ -59,7 +58,6 @@ export const verifyToken = (
 export const generateToken = (payload: {
   userId: number
   email: string
-  plan: string
 }): string => {
   return jwt.sign(payload, process.env.JWT_SECRET || 'secret', {
     expiresIn: '7d'
