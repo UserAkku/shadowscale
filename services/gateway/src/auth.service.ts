@@ -1,6 +1,10 @@
+import path from 'path'
+import dotenv from 'dotenv'
 import { Pool } from 'pg'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 interface User {
   id: number
