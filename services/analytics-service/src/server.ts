@@ -61,6 +61,6 @@ app.get('/health', (req: Request, res: Response) => {
 })
 
 const PORT: number = parseInt(process.env.PORT || '3003')
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Analytics Service running on port ${PORT}`)
 })

@@ -140,6 +140,6 @@ app.get('/health', (req: Request, res: Response) => {
 })
 
 const PORT = parseInt(process.env.PORT || '3001')
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 URL Service running on port ${PORT}`)
 })

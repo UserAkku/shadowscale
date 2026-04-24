@@ -98,6 +98,6 @@ app.delete('/cache/:shortCode', async (req: Request<{ shortCode: string }>, res:
 redirectService.warmUpCache()
 
 const PORT: number = parseInt(process.env.PORT || '3002')
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Redirect Service running on port ${PORT}`)
 })
