@@ -1,4 +1,5 @@
-import 'dotenv/config'
+import path from 'path'
+import dotenv from 'dotenv'
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import axios from 'axios'
@@ -7,6 +8,8 @@ import jwt from 'jsonwebtoken'
 import authService from './auth.service'
 import { abuseCheck } from './abuse.middleware'
 import { breakers } from './circuit-breaker'
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 const app = express()
 app.use(express.json())
@@ -169,8 +172,8 @@ app.use('/r', abuseCheck, createProxyMiddleware({
 
 // ── ANALYTICS ROUTES ─────────────────────────────
 
-// Analytics — PUBLIC (claim token se)
-app.get('/api/analytics/:shortCode', abuseCheck, async (req: Request, res: Response) => {
+// Analytics — PROTECTED (login chahiye)
+app.get('/api/analytics/:shortCode', verifyToken, abuseCheck, async (req: Request, res: Response) => {
   try {
     const response = await axios.get(
       `${SERVICES.analytics}/analytics/${req.params.shortCode}`
