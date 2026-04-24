@@ -32,7 +32,7 @@ const verifyToken = (req: Request, res: Response, next: any) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as any
-    req.user = decoded
+    (req as any).user = decoded
     next()
   } catch {
     res.status(401).json({ error: 'Token invalid' })
@@ -210,12 +210,7 @@ app.get('/health', async (req: Request, res: Response) => {
   })
 })
 
-// Express mein user type add karo
-declare global {
-  namespace Express {
-    interface Request { user?: any }
-  }
-}
+
 
 const PORT = parseInt(process.env.PORT || '3000')
 app.listen(PORT, '0.0.0.0', () => {
