@@ -136,6 +136,6 @@ app.get('/health', (req: Request, res: Response) => {
 })
 
 const PORT: number = parseInt(process.env.PORT || '3004')
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Abuse Service running on port ${PORT}`)
 })

@@ -13,7 +13,10 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true
+}))
 
 const SERVICES = {
   url: process.env.URL_SERVICE_URL || 'http://localhost:3001',
@@ -215,6 +218,6 @@ declare global {
 }
 
 const PORT = parseInt(process.env.PORT || '3000')
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Gateway running on port ${PORT}`)
 })

@@ -12,7 +12,8 @@ class Database {
   static getInstance(): Pool {
     if (!Database.instance) {
       Database.instance = new Pool({
-        connectionString: process.env.DATABASE_URL
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
       })
 
       Database.instance.on('connect', () => {

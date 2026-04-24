@@ -11,9 +11,10 @@ class RedisClient {
 
   static getInstance(): Redis {
     if (!RedisClient.instance) {
-      RedisClient.instance = new Redis(
-        process.env.REDIS_URL || 'redis://localhost:6379'
-      )
+      const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
+      RedisClient.instance = new Redis(redisUrl, {
+        tls: redisUrl.startsWith('rediss://') ? {} : undefined
+      })
 
       RedisClient.instance.on('connect', () => {
         console.log('✅ Redis connected!')
