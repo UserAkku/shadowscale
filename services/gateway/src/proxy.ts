@@ -1,22 +1,20 @@
-import { createProxyMiddleware, Options } from 'http-proxy-middleware'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 /**
  * Create a proxy for each service
  * Gateway receives requests and forwards them to the correct service
  */
 
-const proxyOptions = (target: string, pathRewrite?: Record<string, string>): Options => ({
+const proxyOptions = (target: string, pathRewrite?: Record<string, string>) => ({
   target,
   changeOrigin: true,
   pathRewrite,
-  on: {
-    error: (err, req, res: any) => {
-      console.error('Proxy error:', err.message)
-      res.status(502).json({
-        success: false,
-        error: 'Service temporarily unavailable'
-      })
-    }
+  onError: (err: Error, req: any, res: any) => {
+    console.error('Proxy error:', err.message)
+    res.status(502).json({
+      success: false,
+      error: 'Service temporarily unavailable'
+    })
   }
 })
 
