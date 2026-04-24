@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --background: #e8e8e8;
+  --foreground: #000000;
+  --border: #000000;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+  }
+}
+
+@layer utilities {
+  .border-heavy {
+    border: 2px solid #000000;
+  }
+  .border-b-heavy {
+    border-bottom: 2px solid #000000;
+  }
+  .border-t-heavy {
+    border-top: 2px solid #000000;
+  }
+  .border-l-heavy {
+    border-left: 2px solid #000000;
+  }
+  .border-r-heavy {
+    border-right: 2px solid #000000;
+  }
+}
