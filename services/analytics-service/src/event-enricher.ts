@@ -81,7 +81,7 @@ const getLocationFromIP = async (ip: string): Promise<{ country: string; city: s
     clearTimeout(timeout)
 
     if (response.ok) {
-      const data = await response.json()
+      const data = await response.json() as { status: string; country?: string; city?: string }
       
       if (data.status === 'success') {
         const result = {
