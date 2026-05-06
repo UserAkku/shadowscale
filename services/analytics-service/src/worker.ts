@@ -22,14 +22,29 @@ class AnalyticsWorker {
           port: parseInt(url.port),
           password: url.password,
           username: url.username,
-          tls: isTLS ? {} : undefined
+          tls: isTLS ? {} : undefined,
+          maxRetriesPerRequest: 1
+        },
+        // ── REDIS OPTIMIZATION ──────────────────────────
+        // Default: worker har ~2 sec pe Redis poll karta hai
+        // = ~43,000 commands/day IDLE mein bhi!
+        // 
+        // Fix: polling interval 30 sec kiya
+        // = ~2,880 commands/day (93% reduction!)
+        drainDelay: 30,           // 30 sec wait jab queue khali ho
+        stalledInterval: 120000,  // Stalled check har 2 min (default 30s)
+        maxStalledCount: 2,       // 2 stall ke baad failed mark karo
+        concurrency: 3,           // 3 jobs parallel process karo
+        limiter: {
+          max: 10,                // Max 10 jobs
+          duration: 1000          // Per second — rate limit
         }
       }
     )
 
     this.setupEvents()
     this.startBatchFlush()
-    console.log('👂 Analytics Worker sun raha hai...')
+    console.log('👂 Analytics Worker sun raha hai (optimized polling)...')
   }
 
   private async processJob(job: Job): Promise<void> {
@@ -81,12 +96,13 @@ class AnalyticsWorker {
   }
 
   private startBatchFlush(): void {
+    // 30 sec pe flush — pehle 10 sec tha (extra Redis calls)
     setInterval(async () => {
       if (this.batch.length > 0) {
         console.log(`⏰ Time-based flush: ${this.batch.length} events`)
         await this.flushBatch()
       }
-    }, 10000) // 10 sec
+    }, 30000) // 30 sec
   }
 
   private setupEvents(): void {
