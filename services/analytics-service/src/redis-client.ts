@@ -6,9 +6,11 @@ class RedisClient {
   static getInstance(): Redis {
     if (!RedisClient.instance) {
       const redisUrl = process.env.REDIS_URL!
+      const isTLS = redisUrl.startsWith('rediss://')
 
       RedisClient.instance = new Redis(redisUrl, {
-        tls: {}  // Upstash hamesha TLS use karta hai
+        tls: isTLS ? {} : undefined,
+        maxRetriesPerRequest: null  // BullMQ ke liye required
       })
 
       RedisClient.instance.on('connect', () => console.log('✅ Redis connected!'))

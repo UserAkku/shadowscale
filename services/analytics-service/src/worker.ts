@@ -9,7 +9,9 @@ class AnalyticsWorker {
   private readonly BATCH_SIZE: number = 50
 
   constructor() {
-    const url = new URL(process.env.REDIS_URL!)
+    const redisUrl = process.env.REDIS_URL!
+    const url = new URL(redisUrl)
+    const isTLS = redisUrl.startsWith('rediss://')
 
     this.worker = new Worker(
       'click-events',
@@ -20,7 +22,7 @@ class AnalyticsWorker {
           port: parseInt(url.port),
           password: url.password,
           username: url.username,
-          tls: {}  // Upstash hamesha TLS
+          tls: isTLS ? {} : undefined
         }
       }
     )
@@ -32,10 +34,16 @@ class AnalyticsWorker {
 
   private async processJob(job: Job): Promise<void> {
     const rawEvent = job.data as RawClickEvent
-    console.log(`📥 Event mila: ${rawEvent.shortCode}`)
-    const enriched = enrichEvent(rawEvent)
+    console.log(`📥 Event mila: ${rawEvent.shortCode} (IP: ${rawEvent.ip})`)
+
+    // enrichEvent ab async hai (API call for geo lookup)
+    const enriched = await enrichEvent(rawEvent)
+
+    console.log(`🌍 Geo: ${enriched.country} / ${enriched.city} | 📱 ${enriched.device} | 🌐 ${enriched.browser}`)
+
     await counter.increment(rawEvent.shortCode)
     this.batch.push(enriched)
+
     if (this.batch.length >= this.BATCH_SIZE) {
       await this.flushBatch()
     }
@@ -67,6 +75,7 @@ class AnalyticsWorker {
       console.log(`✅ ${toSave.length} events saved!`)
     } catch (err) {
       console.error('Batch save error:', err)
+      // Failed events wapas batch mein daalo — retry ho jayega
       this.batch = [...toSave, ...this.batch]
     }
   }
@@ -77,7 +86,7 @@ class AnalyticsWorker {
         console.log(`⏰ Time-based flush: ${this.batch.length} events`)
         await this.flushBatch()
       }
-    }, 10000)
+    }, 10000) // 10 sec
   }
 
   private setupEvents(): void {

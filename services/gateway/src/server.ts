@@ -12,6 +12,11 @@ import { breakers } from './circuit-breaker'
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 const app = express()
+
+// Render ke load balancer ke peeche hai — trust proxy enable karo
+// taaki X-Forwarded-For se real client IP mile
+app.set('trust proxy', true)
+
 app.use(express.json())
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
@@ -170,7 +175,8 @@ app.delete('/api/urls/:shortCode', verifyToken, async (req: Request, res: Respon
 app.use('/r', abuseCheck, createProxyMiddleware({
   target: SERVICES.redirect,
   changeOrigin: true,
-  pathRewrite: { '^/r': '' }
+  pathRewrite: { '^/r': '' },
+  xfwd: true  // X-Forwarded-For header forward karo — real client IP ke liye
 }))
 
 // ── ANALYTICS ROUTES ─────────────────────────────
@@ -189,24 +195,32 @@ app.get('/api/analytics/:shortCode', verifyToken, abuseCheck, async (req: Reques
 
 // ── HEALTH CHECK ─────────────────────────────────
 
-app.get('/health', async (req: Request, res: Response) => {
+// Simple health check — cron jobs ke liye (lightweight, fast)
+app.get('/health', (req: Request, res: Response) => {
+  res.set('Content-Type', 'text/plain')
+  res.send('OK')
+})
+
+// Detailed health check — debugging ke liye (all downstream services)
+app.get('/health/detailed', async (req: Request, res: Response) => {
   const checks = await Promise.allSettled([
-    axios.get(`${SERVICES.url}/health`, { timeout: 2000 }),
-    axios.get(`${SERVICES.redirect}/health`, { timeout: 2000 }),
-    axios.get(`${SERVICES.analytics}/health`, { timeout: 2000 }),
-    axios.get(`${SERVICES.abuse}/health`, { timeout: 2000 })
+    axios.get(`${SERVICES.url}/health`, { timeout: 5000 }),
+    axios.get(`${SERVICES.redirect}/health`, { timeout: 5000 }),
+    axios.get(`${SERVICES.analytics}/health`, { timeout: 5000 }),
+    axios.get(`${SERVICES.abuse}/health`, { timeout: 5000 })
   ])
 
   const names = ['url', 'redirect', 'analytics', 'abuse']
   const services: Record<string, string> = {}
 
   checks.forEach((check, i) => {
-    services[names[i]] = check.status === 'fulfilled' ? 'UP ✅' : 'DOWN ❌'
+    services[names[i]] = check.status === 'fulfilled' ? 'UP' : 'DOWN'
   })
 
   res.json({
     status: checks.every(c => c.status === 'fulfilled') ? 'OK' : 'DEGRADED',
-    services
+    services,
+    timestamp: new Date().toISOString()
   })
 })
 
