@@ -8,6 +8,7 @@ import { useAuth } from "./AuthProvider";
 
 export default function URLResultCard({ result }: { result: any }) {
   const { isLoggedIn } = useAuth();
+  const displayUrl = `${window.location.origin}/r/${result.shortCode}`;
 
   return (
     <Card className="mt-8 animate-in slide-in-from-bottom-5">
@@ -17,11 +18,11 @@ export default function URLResultCard({ result }: { result: any }) {
             ORIGINAL: {result.originalUrl}
           </div>
           <div className="text-2xl font-black truncate">
-            {result.shortUrl}
+            {displayUrl}
           </div>
         </div>
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
-          <CopyButton text={result.shortUrl} variant="outline" />
+          <CopyButton text={displayUrl} variant="outline" />
           {isLoggedIn && (
             <Link href={`/analytics/${result.shortCode}`}>
               <Button variant="default">View Analytics</Button>

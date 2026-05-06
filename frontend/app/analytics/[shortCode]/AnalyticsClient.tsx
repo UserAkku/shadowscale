@@ -73,7 +73,7 @@ export default function AnalyticsClient({ shortCode }: { shortCode: string }) {
     );
   }
 
-  const shortUrl = `${process.env.NEXT_PUBLIC_API_URL}/r/${shortCode}`;
+  const shortUrl = `${window.location.origin}/r/${shortCode}`;
 
   return (
     <div className="flex-grow p-6 md:p-12 max-w-6xl mx-auto w-full space-y-12">
