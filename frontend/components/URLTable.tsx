@@ -63,7 +63,7 @@ export default function URLTable({ urls, loading, onRefresh }: { urls: any[], lo
           {urls.map((url) => (
             <tr key={url.id} className="border-b-heavy last:border-b-0 hover:bg-gray-50">
               <td className="p-4 border-r-heavy font-bold">
-                <a href={`${process.env.NEXT_PUBLIC_API_URL}/r/${url.short_code}`} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">
+                <a href={`${window.location.origin}/r/${url.short_code}`} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">
                   {url.short_code} <ExternalLink className="w-3 h-3" />
                 </a>
               </td>
@@ -77,7 +77,7 @@ export default function URLTable({ urls, loading, onRefresh }: { urls: any[], lo
                 {new Date(url.created_at).toLocaleDateString()}
               </td>
               <td className="p-4 flex gap-2">
-                <CopyButton text={`${process.env.NEXT_PUBLIC_API_URL}/r/${url.short_code}`} variant="outline" className="h-8 px-3 py-1 text-xs" />
+                <CopyButton text={`${window.location.origin}/r/${url.short_code}`} variant="outline" className="h-8 px-3 py-1 text-xs" />
                 <Link href={`/analytics/${url.short_code}`}>
                   <Button variant="default" className="h-8 px-3 py-1 text-xs gap-1">
                     <BarChart2 className="w-3 h-3" /> Stats
