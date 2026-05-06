@@ -16,7 +16,13 @@ class ClickQueue {
         port: parseInt(url.port),
         password: url.password,
         username: url.username,
-        tls: isTLS ? {} : undefined
+        tls: isTLS ? {} : undefined,
+        maxRetriesPerRequest: 1
+      },
+      defaultJobOptions: {
+        removeOnComplete: true,   // Complete hone pe Redis se hatao — space bachao
+        removeOnFail: 100,        // Sirf last 100 failed jobs rakho
+        attempts: 2               // Max 2 retry — zyada retry = zyada Redis calls
       }
     })
     console.log('📬 Click queue ready!')
@@ -27,7 +33,8 @@ class ClickQueue {
       await this.queue.add('click', event)
       console.log(`📤 Click event queued: ${event.shortCode}`)
     } catch (err) {
-      console.error('Queue error:', err)
+      // Queue fail? Silently skip — redirect nahi rukna chahiye
+      console.error('⚠️ Queue error (skipping):', (err as Error).message)
     }
   }
 }
