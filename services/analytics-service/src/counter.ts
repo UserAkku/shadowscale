@@ -18,18 +18,19 @@ class ClickCounter {
     const hour = new Date().getHours()                   // 0-23
 
     await Promise.all([
-      // Total clicks
+      // Total clicks — kabhi expire nahi hota
       redis.incr(`clicks:total:${shortCode}`),
 
       // Aaj ke clicks
       redis.incr(`clicks:daily:${shortCode}:${today}`),
 
-      // Is ghante ke clicks
-      redis.incr(`clicks:hourly:${shortCode}:${hour}`),
+      // Is ghante ke clicks — DATE + HOUR dono include karo
+      // Pehle sirf hour tha → alag din ke same hour ke data mix ho rahe the
+      redis.incr(`clicks:hourly:${shortCode}:${today}:${hour}`),
 
       // TTL set karo — purane data clean ho jaaye
       redis.expire(`clicks:daily:${shortCode}:${today}`, 86400 * 7), // 7 din
-      redis.expire(`clicks:hourly:${shortCode}:${hour}`, 86400)       // 1 din
+      redis.expire(`clicks:hourly:${shortCode}:${today}:${hour}`, 86400 * 2)  // 2 din
     ])
   }
 
@@ -48,11 +49,21 @@ class ClickCounter {
 
   // Last 24 hours hourly data lo
   async getHourlyData(shortCode: string): Promise<{ hour: number; clicks: number }[]> {
-    const hours = Array.from({ length: 24 }, (_, i) => i)
+    const now = new Date()
+    const hours: { hour: number; date: string }[] = []
+
+    // Last 24 hours ka data — current hour se peeche jaao
+    for (let i = 23; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 3600000)
+      hours.push({
+        hour: d.getHours(),
+        date: d.toISOString().split('T')[0]
+      })
+    }
 
     const results = await Promise.all(
-      hours.map(async (hour) => {
-        const val = await redis.get(`clicks:hourly:${shortCode}:${hour}`)
+      hours.map(async ({ hour, date }) => {
+        const val = await redis.get(`clicks:hourly:${shortCode}:${date}:${hour}`)
         return {
           hour,
           clicks: parseInt(val || '0')
