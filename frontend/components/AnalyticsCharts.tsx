@@ -16,8 +16,9 @@ export default function AnalyticsCharts({ data }: { data: any }) {
 
   // Fallback UI for empty charts
   const renderEmpty = () => (
-    <div className="flex h-full items-center justify-center font-mono text-sm font-bold text-gray-500 uppercase">
-      No Data Available
+    <div className="flex flex-col h-full items-center justify-center text-center font-mono text-gray-500 uppercase">
+      <span className="text-sm font-bold text-black">No Data Available</span>
+      <span className="text-xs mt-2 opacity-70">(Refresh after 30s if you just clicked the link)</span>
     </div>
   );
 
@@ -150,12 +151,11 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   dataKey="country" 
                   type="category" 
                   tick={{ fontFamily: 'monospace', fontSize: 12 }} 
-                  width={90} 
                   label={{ 
                     value: 'COUNTRY', 
                     angle: -90, 
                     position: 'insideLeft', 
-                    offset: -20, 
+                    offset: 15, 
                     fontFamily: 'monospace', 
                     fontSize: 12, 
                     fontWeight: 'bold' 
