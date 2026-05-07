@@ -793,30 +793,6 @@ Multi-layer defense:
 
 ---
 
-## Known Notes
-
-- `database/migrations/001_init.sql` is currently empty — apply schema manually
-- Runtime blacklist relies on Redis + Bloom filter (not the `blacklisted_ips` table at runtime)
-- Analytics worker expects `click_events.city` column
-- Gateway auth flow does not use a `plan` column
-- Frontend redirect rewrite in `next.config.ts` defaults to production Gateway URL
-
----
-
-## Future Improvements
-
-- Fill proper SQL migration files
-- Add `docker-compose` for the entire stack (all services + Redis + PostgreSQL)
-- Add shared `.env.example` files per service
-- Add integration tests
-- Add Swagger/OpenAPI docs per service
-- Add worker retry and dead-letter queue handling
-- Add link expiry / custom short codes
-- Add QR code generation for short links
-- Add dark mode toggle on frontend
-
----
-
 ## Documentation
 
 Additional project documentation is available in the `docs/` directory:
