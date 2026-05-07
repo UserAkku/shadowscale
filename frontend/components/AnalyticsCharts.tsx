@@ -50,31 +50,32 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                 <XAxis 
                   dataKey="hour" 
                   tickFormatter={(tick) => `${tick}:00`} 
-                  tick={{ fontFamily: 'monospace', fontSize: 12 }} 
+                  tick={{ fontFamily: 'monospace', fontSize: 10 }} 
+                  minTickGap={20}
                   label={{ 
                     value: 'TIME OF DAY (HOURS)', 
                     position: 'insideBottom', 
-                    offset: -20, 
+                    offset: -15, 
                     fontFamily: 'monospace', 
-                    fontSize: 12, 
+                    fontSize: 10, 
                     fontWeight: 'bold' 
                   }} 
                 />
                 <YAxis 
                   allowDecimals={false} 
-                  tick={{ fontFamily: 'monospace', fontSize: 12 }} 
+                  tick={{ fontFamily: 'monospace', fontSize: 10 }} 
                   label={{ 
                     value: 'TOTAL CLICKS', 
                     angle: -90, 
                     position: 'insideLeft', 
-                    offset: 15, 
+                    offset: 10, 
                     fontFamily: 'monospace', 
-                    fontSize: 12, 
+                    fontSize: 10, 
                     fontWeight: 'bold' 
                   }} 
                 />
                 <Tooltip 
-                  contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold' }} 
+                  contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold', fontSize: '12px', padding: '8px' }} 
                   labelFormatter={(label) => `Time: ${label}:00`}
                 />
                 <Area 
@@ -105,19 +106,20 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   data={safeDevices}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={45}
+                  outerRadius={75}
                   paddingAngle={2}
                   dataKey="count"
                   nameKey="device"
                   label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   labelLine={{ stroke: '#000', strokeWidth: 1 }}
+                  style={{ fontSize: '10px', fontFamily: 'monospace', fontWeight: 'bold' }}
                 >
                   {safeDevices.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold' }} />
+                <Tooltip contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold', fontSize: '12px', padding: '8px' }} />
               </PieChart>
             </ResponsiveContainer>
           ) : renderEmpty()}
@@ -137,32 +139,32 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                 <XAxis 
                   type="number" 
                   allowDecimals={false} 
-                  tick={{ fontFamily: 'monospace', fontSize: 12 }} 
+                  tick={{ fontFamily: 'monospace', fontSize: 10 }} 
                   label={{ 
                     value: 'NUMBER OF CLICKS', 
                     position: 'insideBottom', 
-                    offset: -20, 
+                    offset: -15, 
                     fontFamily: 'monospace', 
-                    fontSize: 12, 
+                    fontSize: 10, 
                     fontWeight: 'bold' 
                   }} 
                 />
                 <YAxis 
                   dataKey="country" 
                   type="category" 
-                  tick={{ fontFamily: 'monospace', fontSize: 12 }} 
+                  tick={{ fontFamily: 'monospace', fontSize: 10 }} 
                   label={{ 
                     value: 'COUNTRY', 
                     angle: -90, 
                     position: 'insideLeft', 
-                    offset: 15, 
+                    offset: 5, 
                     fontFamily: 'monospace', 
-                    fontSize: 12, 
+                    fontSize: 10, 
                     fontWeight: 'bold' 
                   }} 
                 />
                 <Tooltip 
-                  contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold' }} 
+                  contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold', fontSize: '12px', padding: '8px' }} 
                   cursor={{ fill: '#f0f0f0' }} 
                 />
                 <Bar dataKey="count" fill="#000" barSize={30} radius={[0, 4, 4, 0]} />
@@ -185,18 +187,19 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   data={safeBrowsers}
                   cx="50%"
                   cy="50%"
-                  outerRadius={120}
+                  outerRadius={75}
                   dataKey="count"
                   nameKey="browser"
                   label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   labelLine={{ stroke: '#000', strokeWidth: 1 }}
+                  style={{ fontSize: '10px', fontFamily: 'monospace', fontWeight: 'bold' }}
                 >
                   {safeBrowsers.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold' }} />
-                <Legend wrapperStyle={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', textTransform: 'uppercase', paddingTop: '20px' }} />
+                <Tooltip contentStyle={{ borderRadius: 0, border: '2px solid black', backgroundColor: '#fff', textTransform: 'uppercase', fontWeight: 'bold', fontSize: '12px', padding: '8px' }} />
+                <Legend wrapperStyle={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 'bold', textTransform: 'uppercase', paddingTop: '20px' }} />
               </PieChart>
             </ResponsiveContainer>
           ) : renderEmpty()}
