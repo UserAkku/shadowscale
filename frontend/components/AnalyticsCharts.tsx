@@ -21,6 +21,12 @@ export default function AnalyticsCharts({ data }: { data: any }) {
     </div>
   );
 
+  // Ensure counts are numbers (PostgreSQL COUNT() returns strings which breaks PieChart)
+  const safeDevices = data.devices?.map((d: any) => ({ ...d, count: Number(d.count) })) || [];
+  const safeBrowsers = data.browsers?.map((d: any) => ({ ...d, count: Number(d.count) })) || [];
+  const safeCountries = data.topCountries?.map((d: any) => ({ ...d, count: Number(d.count) })) || [];
+  const safeHourly = data.hourlyData?.map((d: any) => ({ ...d, clicks: Number(d.clicks) })) || [];
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       
@@ -30,9 +36,9 @@ export default function AnalyticsCharts({ data }: { data: any }) {
           <CardTitle>Hourly Clicks Trend (Last 24h)</CardTitle>
         </CardHeader>
         <CardContent className="h-96">
-          {hasData(data.hourlyData) ? (
+          {hasData(safeHourly) ? (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data.hourlyData} margin={{ top: 20, right: 30, left: 10, bottom: 25 }}>
+              <AreaChart data={safeHourly} margin={{ top: 20, right: 30, left: 10, bottom: 25 }}>
                 <defs>
                   <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#000" stopOpacity={0.5}/>
@@ -91,11 +97,11 @@ export default function AnalyticsCharts({ data }: { data: any }) {
           <CardTitle>Device Breakdown</CardTitle>
         </CardHeader>
         <CardContent className="h-80">
-          {hasData(data.devices) ? (
+          {hasData(safeDevices) ? (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                 <Pie
-                  data={data.devices}
+                  data={safeDevices}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -106,7 +112,7 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   labelLine={{ stroke: '#000', strokeWidth: 1 }}
                 >
-                  {data.devices.map((entry: any, index: number) => (
+                  {safeDevices.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -123,9 +129,9 @@ export default function AnalyticsCharts({ data }: { data: any }) {
           <CardTitle>Top Countries</CardTitle>
         </CardHeader>
         <CardContent className="h-80">
-          {hasData(data.topCountries) ? (
+          {hasData(safeCountries) ? (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.topCountries} layout="vertical" margin={{ top: 20, right: 30, left: 30, bottom: 25 }}>
+              <BarChart data={safeCountries} layout="vertical" margin={{ top: 20, right: 30, left: 30, bottom: 25 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" horizontal={false} />
                 <XAxis 
                   type="number" 
@@ -172,11 +178,11 @@ export default function AnalyticsCharts({ data }: { data: any }) {
           <CardTitle>Browser Market Share</CardTitle>
         </CardHeader>
         <CardContent className="h-96">
-          {hasData(data.browsers) ? (
+          {hasData(safeBrowsers) ? (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                 <Pie
-                  data={data.browsers}
+                  data={safeBrowsers}
                   cx="50%"
                   cy="50%"
                   outerRadius={120}
@@ -185,7 +191,7 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   labelLine={{ stroke: '#000', strokeWidth: 1 }}
                 >
-                  {data.browsers.map((entry: any, index: number) => (
+                  {safeBrowsers.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
