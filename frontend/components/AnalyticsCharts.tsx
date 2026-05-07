@@ -103,7 +103,7 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   paddingAngle={2}
                   dataKey="count"
                   nameKey="device"
-                  label={({ device, percent }) => `${device} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   labelLine={{ stroke: '#000', strokeWidth: 1 }}
                 >
                   {data.devices.map((entry: any, index: number) => (
@@ -182,7 +182,7 @@ export default function AnalyticsCharts({ data }: { data: any }) {
                   outerRadius={120}
                   dataKey="count"
                   nameKey="browser"
-                  label={({ browser, percent }) => `${browser} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   labelLine={{ stroke: '#000', strokeWidth: 1 }}
                 >
                   {data.browsers.map((entry: any, index: number) => (
