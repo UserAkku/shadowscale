@@ -94,7 +94,7 @@ shadowscale/
 │   │   ├── ShortenForm.tsx      # URL shortening form
 │   │   ├── URLResultCard.tsx    # Short URL result display
 │   │   ├── URLTable.tsx         # Dashboard URL table with actions
-│   │   ├── AnalyticsCharts.tsx  # Recharts — line, bar, pie charts
+│   │   ├── AnalyticsCharts.tsx  # Recharts — area, doughnut, bar, solid pie charts
 │   │   └── ui/
 │   │       ├── Button.tsx       # Reusable button component
 │   │       ├── Card.tsx         # Card component
@@ -277,7 +277,7 @@ Important files:
 | `ShortenForm`       | URL input form with Zod validation + claim token handling |
 | `URLResultCard`     | Displays shortened URL result with copy button         |
 | `URLTable`          | Dashboard table showing all user URLs with actions     |
-| `AnalyticsCharts`   | Recharts visualizations — hourly line chart, device pie chart, country/browser bar charts |
+| `AnalyticsCharts`   | Recharts visualizations — hourly area chart, device doughnut chart, country bar chart, browser pie chart |
 | `AuthProvider`      | React Context providing auth state across the app      |
 | `ToastProvider`     | Toast notification system for user feedback            |
 
